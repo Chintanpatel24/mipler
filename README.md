@@ -1,3 +1,17 @@
+<div align=center>
+<pre>
+╔══════════════════════════════════════════════════╗
+║  ███╗   ███╗██╗██████╗ ██╗     ███████╗██████╗   ║
+║  ████╗ ████║██║██╔══██╗██║     ██╔════╝██╔══██╗  ║
+║  ██╔████╔██║██║██████╔╝██║     █████╗  ██████╔╝  ║
+║  ██║╚██╔╝██║██║██╔═══╝ ██║     ██╔══╝  ██╔══██╗  ║
+║  ██║ ╚═╝ ██║██║██║     ███████╗███████╗██║  ██║  ║
+║  ╚═╝     ╚═╝╚═╝╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝  ║
+╚══════════════════════════════════════════════════╝
+</pre>
+</div>
+
+
 # MIPLER - OSINT Investigation Workspace
 
 A powerful, open-source desktop application for OSINT (Open Source Intelligence) investigations. MIPLER provides a visual, node-based workflow system similar to n8n, with 14+ pre-built OSINT tools, customizable integrations, and auto-saving investigation workspaces.
