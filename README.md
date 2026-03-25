@@ -35,8 +35,8 @@ A powerful, open-source desktop application for OSINT (Open Source Intelligence)
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Chintanpatel24/Mipler.git
-   cd Mipler
+   git clone https://github.com/Chintanpatel24/mipler.git
+   cd mipler
    ```
 
 2. **Install dependencies**
@@ -391,7 +391,7 @@ MIPLER is a tool for security research and authorized testing only. Users are re
 
 ## Authors
 
-- **Creator**: Mipler Community
+- **Creator**: Chintanpatel24
 - **Contributors**: See CONTRIBUTORS.md
 
 ## Changelog
