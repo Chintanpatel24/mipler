@@ -14,7 +14,7 @@ Thank you for your interest in contributing to MIPLER! This document provides gu
 1. **Fork** the repository on GitHub
 2. **Clone** your fork locally:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/mipler.git
+   git clone https://github.com/Chintanpatel24/mipler.git
    cd mipler
    ```
 3. **Add upstream** remote:
