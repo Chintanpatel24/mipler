@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
-import { Button } from '../ui/Button';
 import { useWorkspaceStore } from '../../store/useWorkspaceStore';
-import { importProjectZip, selectZipFile } from '../../utils/zipUtils';
-import { uploadWorkspace, loadWithFileSystemAccess, hasFileSystemAccess } from '../../utils/fileSystem';
+import { uploadWorkspace } from '../../utils/fileSystem';
 
 export const ImportModal: React.FC = () => {
   const { importModalOpen, setImportModalOpen, loadWorkspaceState } = useWorkspaceStore();
@@ -11,78 +9,62 @@ export const ImportModal: React.FC = () => {
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
 
-  const zipImport = async () => {
+  const doImport = async () => {
     setBusy(true);
     setError('');
     setStatus('Selecting file...');
     try {
-      const file = await selectZipFile();
-      if (!file) {
-        setBusy(false);
+      const state = await uploadWorkspace();
+      if (state) {
+        setStatus('Loading workspace...');
+        loadWorkspaceState(state);
+        setImportModalOpen(false);
+      } else {
         setStatus('');
-        return;
       }
-      setStatus(`Reading ${file.name} (${(file.size / 1024).toFixed(1)} KB)...`);
-      const state = await importProjectZip(file);
-      setStatus(`Loaded ${state.nodes.length} cards, ${state.edges.length} connections`);
-      loadWorkspaceState(state);
-      setTimeout(() => setImportModalOpen(false), 500);
     } catch (e: any) {
-      setError(e.message || 'Failed to import ZIP. Make sure it is a valid Mipler export.');
+      setError(e.message || 'Failed to import. Make sure it is a valid Mipler export.');
       setStatus('');
     }
     setBusy(false);
   };
 
-  const jsonImport = async () => {
-    setError('');
-    setStatus('');
-    try {
-      const state = hasFileSystemAccess()
-        ? await loadWithFileSystemAccess()
-        : await uploadWorkspace();
-      if (state) {
-        loadWorkspaceState(state);
-        setImportModalOpen(false);
-      }
-    } catch (e: any) {
-      setError(e.message || 'Failed to import JSON');
-    }
-  };
-
   return (
-    <Modal open={importModalOpen} onClose={() => { setImportModalOpen(false); setError(''); setStatus(''); }} title="Import Project">
-      <div className="space-y-4">
-        <p className="text-sm text-wall-textMuted">
-          Import a previously exported investigation. All current work will be replaced.
+    <Modal
+      open={importModalOpen}
+      onClose={() => { setImportModalOpen(false); setError(''); setStatus(''); }}
+      title="Import Workspace"
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <p style={{ fontSize: 12, color: '#666', fontFamily: 'IBM Plex Sans' }}>
+          Import a previously exported Mipler workspace. All current work will be replaced.
         </p>
 
         {error && (
-          <div className="px-3 py-2.5 bg-red-900/20 border border-red-800/30 rounded-lg text-xs text-red-400 flex items-start gap-2">
-            <span className="text-red-500 mt-0.5">⚠</span>
-            <div>
-              <p className="font-medium mb-0.5">Import failed</p>
-              <p>{error}</p>
-            </div>
+          <div style={{ padding: '8px 12px', background: '#2a1a1a', border: '1px solid #4a2020', borderRadius: 5 }}>
+            <p style={{ fontSize: 11, color: '#ef4444', fontFamily: 'IBM Plex Sans' }}>{error}</p>
           </div>
         )}
 
         {status && !error && (
-          <div className="px-3 py-2 bg-wall-card border border-wall-cardBorder rounded-lg text-xs text-wall-textMuted">
-            {status}
+          <div style={{ padding: '8px 12px', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 5 }}>
+            <p style={{ fontSize: 11, color: '#888', fontFamily: 'IBM Plex Mono, monospace' }}>{status}</p>
           </div>
         )}
 
-        <div className="space-y-2">
-          <Button onClick={zipImport} disabled={busy} className="w-full justify-start">
-            📦 {busy ? 'Importing...' : 'Import ZIP project'}
-          </Button>
-          <Button onClick={jsonImport} variant="secondary" className="w-full justify-start">
-            📄 Import JSON workspace
-          </Button>
-        </div>
+        <button
+          onClick={doImport}
+          disabled={busy}
+          style={{
+            padding: '8px 16px', background: '#0e639c', color: '#fff',
+            border: 'none', borderRadius: 5, fontSize: 12, cursor: busy ? 'default' : 'pointer',
+            fontFamily: 'IBM Plex Sans', opacity: busy ? 0.6 : 1,
+          }}
+        >
+          {busy ? 'Importing...' : 'Select JSON File'}
+        </button>
 
-        <p className="text-xs text-wall-textDim">
+        <p style={{ fontSize: 11, color: '#444', fontFamily: 'IBM Plex Sans' }}>
           Your data stays local. Nothing is uploaded to any server.
         </p>
       </div>

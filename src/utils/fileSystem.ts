@@ -13,7 +13,9 @@ export async function saveWithFileSystemAccess(state: WorkspaceState): Promise<v
     const w = await handle.createWritable();
     await w.write(JSON.stringify(state, null, 2));
     await w.close();
-  } catch (e: any) { if (e.name !== 'AbortError') throw e; }
+  } catch (e: any) {
+    if (e.name !== 'AbortError') throw e;
+  }
 }
 
 export async function loadWithFileSystemAccess(): Promise<WorkspaceState | null> {
@@ -23,30 +25,45 @@ export async function loadWithFileSystemAccess(): Promise<WorkspaceState | null>
     });
     const file = await handle.getFile();
     return JSON.parse(await file.text()) as WorkspaceState;
-  } catch (e: any) { if (e.name !== 'AbortError') throw e; return null; }
+  } catch (e: any) {
+    if (e.name !== 'AbortError') throw e;
+    return null;
+  }
 }
 
 export function downloadWorkspace(state: WorkspaceState): void {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = 'mipler-workspace.json'; a.click();
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'mipler-workspace.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
 
 export function uploadWorkspace(): Promise<WorkspaceState | null> {
   return new Promise((resolve) => {
-    const input = document.createElement('input'); input.type = 'file'; input.accept = '.json';
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
     input.onchange = async () => {
-      const f = input.files?.[0]; if (!f) return resolve(null);
-      try { resolve(JSON.parse(await f.text()) as WorkspaceState); } catch { resolve(null); }
+      const f = input.files?.[0];
+      if (!f) return resolve(null);
+      try {
+        resolve(JSON.parse(await f.text()) as WorkspaceState);
+      } catch {
+        resolve(null);
+      }
     };
     input.click();
   });
 }
 
-export function autoSaveToLocalStorage(): void {}
-export function loadAutoSave(): null { return null; }
-
 export function clearAllLocalData(): void {
-  try { localStorage.clear(); sessionStorage.clear(); } catch {}
+  try {
+    localStorage.clear();
+    sessionStorage.clear();
+  } catch {}
 }

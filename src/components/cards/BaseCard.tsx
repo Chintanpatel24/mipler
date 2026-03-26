@@ -1,9 +1,10 @@
 import React, { type ReactNode, useState } from 'react';
+import { Handle, Position } from 'reactflow';
 import { useWorkspaceStore } from '../../store/useWorkspaceStore';
 
 const CARD_COLORS = [
-  '#f5f5f0', '#fff9db', '#e3f2fd', '#e8f5e9', '#fce4ec',
-  '#f3e5f5', '#fff3e0', '#e0f2f1', '#fafafa', '#263238',
+  '#1e1e1e', '#1a1f2e', '#1f1a1a', '#1a1f1a', '#1f1e16',
+  '#1e1a24', '#161e24', '#242016', '#ffffff', '#f5f5f0',
 ];
 
 interface BaseCardProps {
@@ -17,72 +18,191 @@ interface BaseCardProps {
 }
 
 export const BaseCard: React.FC<BaseCardProps> = ({
-  id, title, children, width = 300, cardColor = '#f5f5f0', onTitleChange, headerExtra,
+  id, title, children, width = 300, cardColor = '#1e1e1e', onTitleChange, headerExtra,
 }) => {
   const removeCard = useWorkspaceStore((s) => s.removeCard);
   const setCardColor = useWorkspaceStore((s) => s.setCardColor);
   const [showColors, setShowColors] = useState(false);
 
-  const isDark = cardColor === '#263238';
-  const textColor = isDark ? '#e0e0e0' : '#1a1a1a';
-  const mutedColor = isDark ? '#90a4ae' : '#888';
-  const borderColor = isDark ? '#37474f' : '#c8c8c0';
-  const headerBg = isDark ? '#2c3e44' : undefined;
+  const isLight = cardColor === '#ffffff' || cardColor === '#f5f5f0';
+  const textColor = isLight ? '#1a1a1a' : '#d4d4d4';
+  const mutedColor = isLight ? '#888' : '#666';
+  const borderColor = isLight ? '#ddd' : '#2a2a2a';
+  const headerBg = isLight ? '#f9f9f7' : '#1a1a1a';
+  const bodyBg = cardColor;
 
   return (
     <div
-      className="rounded shadow-paper relative pin-hole select-none group"
-      style={{ width: `${width}px`, minHeight: '90px', border: `1px solid ${borderColor}`, backgroundColor: cardColor }}
+      className="mipler-card-wrapper"
+      style={{
+        width: `${width}px`,
+        minHeight: '80px',
+        border: `1px solid ${borderColor}`,
+        borderRadius: 7,
+        background: bodyBg,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+        position: 'relative',
+        userSelect: 'none',
+      }}
     >
+      {/* Top-center connection handle — outside the card, easy to grab */}
+      <Handle
+        type="source"
+        position={Position.Top}
+        id="top-source"
+        style={{ top: -8, left: '50%', transform: 'translateX(-50%)', zIndex: 30 }}
+      />
+      <Handle
+        type="target"
+        position={Position.Top}
+        id="top-target"
+        style={{ top: -8, left: '50%', transform: 'translateX(-50%)', zIndex: 30 }}
+      />
+      {/* Bottom handle */}
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="bottom-source"
+        style={{ bottom: -8, left: '50%', transform: 'translateX(-50%)', zIndex: 30 }}
+      />
+      <Handle
+        type="target"
+        position={Position.Bottom}
+        id="bottom-target"
+        style={{ bottom: -8, left: '50%', transform: 'translateX(-50%)', zIndex: 30 }}
+      />
+      {/* Left handle */}
+      <Handle
+        type="source"
+        position={Position.Left}
+        id="left-source"
+        style={{ left: -8, top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="left-target"
+        style={{ left: -8, top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}
+      />
+      {/* Right handle */}
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="right-source"
+        style={{ right: -8, top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}
+      />
+      <Handle
+        type="target"
+        position={Position.Right}
+        id="right-target"
+        style={{ right: -8, top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}
+      />
+
       {/* Header */}
       <div
-        className="card-drag-handle flex items-center gap-2 px-3 py-2.5 cursor-grab active:cursor-grabbing rounded-t"
+        className="card-drag-handle group"
         style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '7px 10px',
           borderBottom: `1px solid ${borderColor}`,
-          background: headerBg || `linear-gradient(to bottom, ${cardColor}, ${cardColor}ee)`,
+          background: headerBg,
+          borderRadius: '7px 7px 0 0',
+          cursor: 'grab',
         }}
       >
-        {/* Color picker toggle */}
-        <div className="relative">
+        {/* Color dot */}
+        <div style={{ position: 'relative' }}>
           <button
             onClick={() => setShowColors(!showColors)}
-            className="w-4 h-4 rounded-full border border-black/20 hover:scale-125 transition-transform"
-            style={{ backgroundColor: cardColor }}
-            title="Change card color"
+            style={{
+              width: 11, height: 11, borderRadius: '50%',
+              background: cardColor === '#1e1e1e' ? '#444' : cardColor,
+              border: '1.5px solid rgba(255,255,255,0.15)',
+              cursor: 'pointer',
+              flexShrink: 0,
+            }}
+            title="Card color"
           />
           {showColors && (
             <>
               <div className="fixed inset-0 z-50" onClick={() => setShowColors(false)} />
-              <div className="absolute top-6 left-0 z-50 bg-wall-surface border border-wall-cardBorder rounded-lg p-2 shadow-xl flex gap-1 flex-wrap w-32 animate-fade-in">
+              <div className="animate-fade-in" style={{
+                position: 'absolute', top: 16, left: 0, zIndex: 50,
+                background: '#1a1a1a', border: '1px solid #2a2a2a',
+                borderRadius: 7, padding: 8, boxShadow: '0 8px 24px rgba(0,0,0,0.7)',
+                display: 'flex', gap: 4, flexWrap: 'wrap', width: 128,
+              }}>
                 {CARD_COLORS.map((c) => (
                   <button
                     key={c}
                     onClick={() => { setCardColor(id, c); setShowColors(false); }}
-                    className={`w-5 h-5 rounded-full border-2 hover:scale-110 transition-all ${cardColor === c ? 'border-white' : 'border-transparent'}`}
-                    style={{ backgroundColor: c }}
+                    style={{
+                      width: 20, height: 20, borderRadius: '50%',
+                      background: c,
+                      border: cardColor === c ? '2px solid #fff' : '2px solid #333',
+                      cursor: 'pointer',
+                      transition: 'transform 0.1s',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.15)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                   />
                 ))}
+                <input
+                  type="color"
+                  value={cardColor}
+                  onChange={(e) => setCardColor(id, e.target.value)}
+                  style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #333', cursor: 'pointer', padding: 0 }}
+                  title="Custom color"
+                />
               </div>
             </>
           )}
         </div>
 
         {onTitleChange ? (
-          <input type="text" value={title} onChange={(e) => onTitleChange(e.target.value)}
-            className="flex-1 bg-transparent font-semibold text-[13px] border-none outline-none"
-            style={{ color: textColor }} placeholder="Title..." />
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => onTitleChange(e.target.value)}
+            style={{
+              flex: 1, background: 'transparent', fontWeight: 500, fontSize: 12,
+              border: 'none', outline: 'none', color: textColor, fontFamily: 'inherit',
+            }}
+            placeholder="Title..."
+          />
         ) : (
-          <span className="flex-1 font-semibold text-[13px] truncate" style={{ color: textColor }}>{title}</span>
+          <span style={{ flex: 1, fontWeight: 500, fontSize: 12, color: textColor, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {title}
+          </span>
         )}
 
         {headerExtra}
 
-        <button onClick={() => removeCard(id)}
-          className="w-5 h-5 flex items-center justify-center rounded hover:bg-red-500/20 transition-all text-xs opacity-0 group-hover:opacity-100"
-          style={{ color: mutedColor }} title="Remove">✕</button>
+        <button
+          onClick={() => removeCard(id)}
+          style={{
+            width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: 4, color: mutedColor, background: 'none', border: 'none', cursor: 'pointer',
+            fontSize: 11, opacity: 0, transition: 'opacity 0.1s, color 0.1s',
+          }}
+          title="Remove"
+          className="card-close-btn"
+          onMouseEnter={(e) => (e.currentTarget.style.color = '#ef4444')}
+          onMouseLeave={(e) => (e.currentTarget.style.color = mutedColor)}
+        >
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <line x1="1" y1="1" x2="8" y2="8"/><line x1="8" y1="1" x2="1" y2="8"/>
+          </svg>
+        </button>
       </div>
 
-      <div className="px-3 py-2.5">{children}</div>
+      <div style={{ padding: '8px 10px' }}>{children}</div>
+
+      <style>{`
+        .mipler-card-wrapper:hover .card-close-btn { opacity: 1 !important; }
+      `}</style>
     </div>
   );
 };

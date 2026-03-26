@@ -50,6 +50,7 @@ interface WorkspaceStore {
   aiPanelOpen: boolean;
   apiSettingsOpen: boolean;
   investigationMenuOpen: boolean;
+  apiWorkspaceOpen: boolean;
 
   // Edge defaults
   defaultEdgeColor: string;
@@ -95,6 +96,7 @@ interface WorkspaceStore {
   setAiPanelOpen: (o: boolean) => void;
   setApiSettingsOpen: (o: boolean) => void;
   setInvestigationMenuOpen: (o: boolean) => void;
+  setApiWorkspaceOpen: (o: boolean) => void;
   setShowDots: (o: boolean) => void;
 
   // AI
@@ -137,7 +139,7 @@ function getDefaultWidth(type: CardType): number {
 
 const makeCardData = (type: CardType, extra?: Partial<CardData>): CardData => {
   const now = new Date().toISOString();
-  return { cardType: type, title: getDefaultTitle(type), content: '', width: getDefaultWidth(type), cardColor: '#f5f5f0', createdAt: now, updatedAt: now, ...extra };
+  return { cardType: type, title: getDefaultTitle(type), content: '', width: getDefaultWidth(type), cardColor: '#1e1e1e', createdAt: now, updatedAt: now, ...extra };
 };
 
 function createInvestigation(name?: string): Investigation {
@@ -173,6 +175,7 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
   aiPanelOpen: false,
   apiSettingsOpen: false,
   investigationMenuOpen: false,
+  apiWorkspaceOpen: false,
 
   defaultEdgeColor: '#888888',
   defaultLineStyle: 'dashed',
@@ -320,6 +323,7 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
   setAiPanelOpen: (o) => set({ aiPanelOpen: o }),
   setApiSettingsOpen: (o) => set({ apiSettingsOpen: o }),
   setInvestigationMenuOpen: (o) => set({ investigationMenuOpen: o }),
+  setApiWorkspaceOpen: (o) => set({ apiWorkspaceOpen: o }),
   setShowDots: (o) => set({ showDots: o }),
 
   setAiApiKey: (key) => set({ aiApiKey: key }),

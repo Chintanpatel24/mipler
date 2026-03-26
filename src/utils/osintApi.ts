@@ -4,124 +4,60 @@ export interface WhoisResult {
   createdDate?: string;
   expiresDate?: string;
   nameservers?: string[];
-  status?: string[];
   raw?: string;
   error?: string;
 }
 
+export interface DnsRecord {
+  type: string;
+  value: string;
+  ttl?: number;
+}
+
 export interface DnsResult {
   domain: string;
-  records: {
-    type: string;
-    value: string;
-    ttl?: number;
-  }[];
+  records: DnsRecord[];
   error?: string;
 }
 
-/**
- * WHOIS lookup using a public API (no key required).
- * Falls back to a secondary service if the first fails.
- */
 export async function lookupWhois(domain: string): Promise<WhoisResult> {
-  const cleanDomain = domain.trim().replace(/^https?:\/\//, '').split('/')[0];
-
   try {
-    // Primary: use RDAP (official IANA protocol, no API key)
-    const rdapRes = await fetch(`https://rdap.org/domain/${cleanDomain}`, {
-      headers: { Accept: 'application/rdap+json' },
-    });
-
-    if (rdapRes.ok) {
-      const data = await rdapRes.json();
-      const nameservers = data.nameservers?.map(
-        (ns: { ldhName: string }) => ns.ldhName
-      ) || [];
-
-      const events = data.events || [];
-      const created = events.find((e: { eventAction: string }) => e.eventAction === 'registration')?.eventDate;
-      const expires = events.find((e: { eventAction: string }) => e.eventAction === 'expiration')?.eventDate;
-
-      const registrar = data.entities?.find(
-        (e: { roles: string[] }) => e.roles?.includes('registrar')
-      )?.vcardArray?.[1]?.find(
-        (v: string[]) => v[0] === 'fn'
-      )?.[3] || 'Unknown';
-
-      return {
-        domain: cleanDomain,
-        registrar: typeof registrar === 'string' ? registrar : 'Unknown',
-        createdDate: created,
-        expiresDate: expires,
-        nameservers,
-        status: data.status || [],
-      };
-    }
-  } catch {
-    // Primary failed, continue to fallback
-  }
-
-  // Fallback: basic DNS-based info
-  try {
-    const dnsResult = await lookupDns(cleanDomain);
-    return {
-      domain: cleanDomain,
-      raw: `DNS records found. Full WHOIS data unavailable via browser.\n\nA records: ${dnsResult.records
-        .filter((r) => r.type === 'A')
-        .map((r) => r.value)
-        .join(', ') || 'none'}`,
-    };
-  } catch {
-    return {
-      domain: cleanDomain,
-      error: 'Could not retrieve WHOIS data. Try the domain without protocol prefix.',
-    };
+    const clean = domain.replace(/^https?:\/\//, '').replace(/\/.*$/, '').trim();
+    const res = await fetch(`https://rdap.org/domain/${clean}`);
+    if (!res.ok) throw new Error(`RDAP lookup failed (${res.status})`);
+    const data = await res.json();
+    const ns = data.nameservers?.map((n: any) => n.ldhName).filter(Boolean) || [];
+    const events = data.events || [];
+    const getDate = (action: string) =>
+      events.find((e: any) => e.eventAction === action)?.eventDate?.split('T')[0];
+    const entities = data.entities || [];
+    const registrar = entities.find((e: any) => e.roles?.includes('registrar'))?.vcardArray?.[1]?.find((v: any) => v[0] === 'fn')?.[3] || '';
+    return { domain: clean, registrar, createdDate: getDate('registration'), expiresDate: getDate('expiration'), nameservers: ns };
+  } catch (e: any) {
+    return { domain, error: e.message };
   }
 }
 
-/**
- * DNS lookup using public DNS-over-HTTPS (Cloudflare or Google).
- */
 export async function lookupDns(domain: string): Promise<DnsResult> {
-  const cleanDomain = domain.trim().replace(/^https?:\/\//, '').split('/')[0];
-  const types = ['A', 'AAAA', 'MX', 'TXT', 'NS', 'CNAME'];
-  const allRecords: DnsResult['records'] = [];
-
-  for (const type of types) {
-    try {
-      const res = await fetch(
-        `https://cloudflare-dns.com/dns-query?name=${cleanDomain}&type=${type}`,
-        {
-          headers: { Accept: 'application/dns-json' },
-        }
-      );
-      if (res.ok) {
-        const data = await res.json();
-        if (data.Answer) {
-          for (const ans of data.Answer) {
-            allRecords.push({
-              type,
-              value: ans.data,
-              ttl: ans.TTL,
-            });
+  try {
+    const clean = domain.replace(/^https?:\/\//, '').replace(/\/.*$/, '').trim();
+    const types = ['A', 'AAAA', 'MX', 'NS', 'TXT', 'CNAME'];
+    const records: DnsRecord[] = [];
+    await Promise.all(
+      types.map(async (type) => {
+        try {
+          const res = await fetch(`https://dns.google/resolve?name=${clean}&type=${type}`);
+          const data = await res.json();
+          if (data.Answer) {
+            for (const a of data.Answer) {
+              records.push({ type, value: a.data, ttl: a.TTL });
+            }
           }
-        }
-      }
-    } catch {
-      // Skip failed record type
-    }
+        } catch {}
+      })
+    );
+    return { domain: clean, records };
+  } catch (e: any) {
+    return { domain, records: [], error: e.message };
   }
-
-  if (allRecords.length === 0) {
-    return {
-      domain: cleanDomain,
-      records: [],
-      error: 'No DNS records found or domain does not exist.',
-    };
-  }
-
-  return {
-    domain: cleanDomain,
-    records: allRecords,
-  };
 }

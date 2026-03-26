@@ -1,44 +1,48 @@
-# Mipler — Investigation Wall for OSINT Research
+# Mipler — Investigation Wall
 
-![License: MIT](https://img.shields.io/badge/License-MIT-gray.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.5-gray.svg)
-![React](https://img.shields.io/badge/React-18-gray.svg)
+A clean, n8n/Notion-inspired OSINT investigation canvas.
 
-**Mipler** is an open-source, privacy-first investigation wall application designed for OSINT (Open Source Intelligence) research. Think of it as a digital cork board — place paper-like cards, attach evidence, draw rope-style connections between findings, and keep everything saved locally on your machine.
+## Features
 
-<p align="center">
-  <em>All data stays on your computer. No accounts. No cloud. No tracking.</em>
-</p>
+- **Multi-investigation** — create multiple canvases, rename, combine
+- **Card types** — Note, Image, PDF, WHOIS, DNS, Reverse Image, OSINT Framework, Custom URL
+- **Easy connections** — handles on all 4 sides of every card, outside the card border
+- **Card colors** — click the dot in the card header to change color
+- **Connection styles** — double-click any edge to change color, pattern, weight
+- **Undo** — Ctrl+Z (or the undo button) steps back mistakes
+- **API Workspace** — VSCode-style JS editor with console output + AI chat panel
+- **AI Assistant** — OpenAI or Anthropic integration
+- **Dot grid** — n8n-style background, togglable
+- **Export / Import** — full JSON export includes everything: all investigations, API keys, AI chat history
+- **Fresh start** — every new page load is a clean slate (nothing persists in localStorage)
 
----
+## Getting Started
 
-## ✨ Features
+```bash
+npm install
+npm run dev
+```
 
-### 🖼 Investigation Wall
-- **Infinite canvas** — zoom, pan, and scroll across a large dark workspace
-- **Paper-style cards** — drag-and-drop cards with a realistic paper texture
-- **Rope connectors** — draw dashed-line connections between any two cards, mimicking strings on an evidence board
-- **Snap-to-grid** — optional alignment for tidy layouts
+## Build for production
 
-### 📝 Card Types
-| Card | Description |
-|------|-------------|
-| **Note** | Free-form text card (Markdown supported) |
-| **Image** | Upload and annotate images |
-| **PDF** | Embed and view PDF documents |
-| **WHOIS Lookup** | Query domain registration info via RDAP (no API key) |
-| **DNS Lookup** | Query DNS records via Cloudflare DoH (no API key) |
-| **Reverse Image Search** | Embedded Google Images, TinEye, or Yandex |
-| **OSINT Framework** | Quick access to osintframework.com |
-| **Custom URL** | Load any URL in a sandboxed iframe |
+```bash
+npm run build
+npm start
+```
 
-### 💾 Persistence
-- **Auto-save** to browser localStorage (safety net)
-- **File System Access API** for saving/loading to a user-chosen folder (Chrome/Edge)
-- **JSON download/upload** fallback for all browsers
-- **Local server mode** with filesystem persistence (Node.js/Express)
+## Connecting cards
 
-### 📦 Import / Export
-- **Export as ZIP**: includes `workspace.json`, `notes/` (Markdown), `assets/` (images, PDFs)
-- **Import ZIP**: restore an entire investigation from a previously exported archive
-- **JSON export/import**: lightweight workspace-only format
+Each card has 4 connection handles — top, bottom, left, right — positioned **outside** the card border so they're easy to grab without focusing the card first. Drag from any handle to any other handle to create a connection. Double-click any connection line to style it.
+
+## Keyboard shortcuts
+
+| Key | Action |
+|-----|--------|
+| Ctrl+Z | Undo |
+| Backspace / Delete | Delete selected card or connection |
+| Scroll | Zoom canvas |
+| Click + drag canvas | Pan |
+
+## Export & Import
+
+Export saves a single JSON file containing every investigation, all card data, edge styles, API keys, and AI history. Import replaces the current workspace with the imported file — everything comes back exactly as left.

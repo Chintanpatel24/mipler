@@ -6,18 +6,16 @@ import { ImportModal } from './components/modals/ImportModal';
 import { CustomUrlModal } from './components/modals/CustomUrlModal';
 import { EdgeStyleModal } from './components/modals/EdgeStyleModal';
 import { ApiSettingsModal } from './components/modals/ApiSettingsModal';
-import { AiPanel } from './components/AiPanel';
 import { clearAllLocalData } from './utils/fileSystem';
 
 const App: React.FC = () => {
   useEffect(() => { clearAllLocalData(); }, []);
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-wall-bg">
+    <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', background: '#111111', overflow: 'hidden' }}>
       <Toolbar />
-      <div className="flex-1 pt-12 relative">
+      <div style={{ flex: 1, position: 'relative' }}>
         <WallCanvas />
-        <AiPanel />
       </div>
       <ExportModal />
       <ImportModal />

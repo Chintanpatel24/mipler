@@ -1,40 +1,30 @@
-import React from 'react';
+import React, { type ButtonHTMLAttributes } from 'react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
-  children: React.ReactNode;
+  size?: 'sm' | 'md';
 }
 
 export const Button: React.FC<ButtonProps> = ({
-  variant = 'secondary',
-  size = 'md',
-  children,
-  className = '',
-  ...props
+  variant = 'primary', size = 'md', children, style, ...props
 }) => {
-  const base =
-    'inline-flex items-center justify-center font-medium rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-wall-textDim disabled:opacity-50 disabled:cursor-not-allowed';
-
-  const variants = {
-    primary: 'bg-wall-accent text-black hover:bg-white',
-    secondary:
-      'bg-wall-card border border-wall-cardBorder text-wall-text hover:bg-wall-cardHover hover:border-wall-textDim',
-    ghost: 'bg-transparent text-wall-textMuted hover:text-wall-text hover:bg-wall-card',
-    danger: 'bg-red-900/30 border border-red-800/50 text-red-300 hover:bg-red-900/50',
+  const base: React.CSSProperties = {
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+    border: 'none', borderRadius: 5, cursor: 'pointer', fontFamily: 'IBM Plex Sans, sans-serif',
+    fontSize: size === 'sm' ? 11 : 12, padding: size === 'sm' ? '4px 10px' : '7px 14px',
+    transition: 'opacity 0.1s',
   };
-
-  const sizes = {
-    sm: 'px-2 py-1 text-xs gap-1',
-    md: 'px-3 py-1.5 text-sm gap-1.5',
-    lg: 'px-4 py-2 text-base gap-2',
+  const variants: Record<string, React.CSSProperties> = {
+    primary: { background: '#0e639c', color: '#fff' },
+    secondary: { background: '#2a2a2a', color: '#ccc', border: 'none' },
+    ghost: { background: 'transparent', color: '#888', border: 'none' },
+    danger: { background: '#7a1a1a', color: '#f87171' },
   };
-
   return (
-    <button
-      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
-      {...props}
-    >
+    <button style={{ ...base, ...variants[variant], ...style }}
+      onMouseEnter={(e) => { if (!props.disabled) (e.currentTarget as HTMLElement).style.opacity = '0.85'; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1'; }}
+      {...props}>
       {children}
     </button>
   );
