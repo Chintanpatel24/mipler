@@ -26,7 +26,7 @@
 /* Connection line while dragging */
 .react-flow__connection-line { stroke: #888 !important; stroke-width: 1.5 !important; stroke-dasharray: 5 3; }
 
-/* ── Handles: n8n-style, clean dots, no glow ── */
+/* ── Handles: clean dots, no hover effects, no glow ── */
 .react-flow__handle {
   width: 12px !important;
   height: 12px !important;
@@ -34,10 +34,11 @@
   border: 2px solid #555 !important;
   border-radius: 50% !important;
   opacity: 1 !important;
-  transition: background 0.15s, border-color 0.15s, transform 0.15s !important;
   z-index: 30 !important;
   cursor: crosshair !important;
   box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 /* Always show handles — no hover-only */
@@ -46,43 +47,45 @@
 .react-flow__handle-left   { left: -8px !important; }
 .react-flow__handle-right  { right: -8px !important; }
 
-/* Hover on handle - no glow, just color change */
+/* Remove ALL hover effects */
 .react-flow__handle:hover {
-  background: #666 !important;
-  border-color: #888 !important;
-  transform: scale(1.2) !important;
+  background: #3a3a3a !important;
+  border-color: #555 !important;
+  transform: none !important;
   box-shadow: none !important;
 }
 
-/* Active/connecting state - no glow */
+/* Remove connecting state effects */
 .react-flow__handle.connecting,
 .react-flow__handle-connecting {
-  background: #888 !important;
-  border-color: #aaa !important;
+  background: #3a3a3a !important;
+  border-color: #555 !important;
   box-shadow: none !important;
+  transform: none !important;
 }
 
-/* Magnetic attraction state — no glow */
+/* Remove magnetic attraction effects */
 .react-flow__node.handle-attract .react-flow__handle {
-  background: #888 !important;
-  border-color: #aaa !important;
-  transform: scale(1.3) !important;
+  background: #3a3a3a !important;
+  border-color: #555 !important;
+  transform: none !important;
   box-shadow: none !important;
 }
 
-/* While connecting, highlight all potential targets - no glow */
+/* Remove connecting target effects */
 .react-flow__node.is-connecting-target .react-flow__handle {
-  background: #777 !important;
-  border-color: #999 !important;
-  transform: scale(1.15) !important;
+  background: #3a3a3a !important;
+  border-color: #555 !important;
+  transform: none !important;
   box-shadow: none !important;
 }
 
-/* Valid connection target */
+/* Remove valid connection effects */
 .react-flow__handle-valid {
-  background: #4ade80 !important;
-  border-color: #22c55e !important;
+  background: #3a3a3a !important;
+  border-color: #555 !important;
   box-shadow: none !important;
+  transform: none !important;
 }
 
 /* N8n-style dot grid */
