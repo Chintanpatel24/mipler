@@ -37,55 +37,29 @@
   z-index: 30 !important;
   cursor: crosshair !important;
   box-shadow: none !important;
-  transform: none !important;
-  transition: none !important;
+  pointer-events: all !important;
 }
 
-/* Always show handles — no hover-only */
-.react-flow__handle-top    { top: -8px !important; }
-.react-flow__handle-bottom { bottom: -8px !important; }
-.react-flow__handle-left   { left: -8px !important; }
-.react-flow__handle-right  { right: -8px !important; }
-
-/* Remove ALL hover effects */
-.react-flow__handle:hover {
-  background: #3a3a3a !important;
-  border-color: #555 !important;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
-/* Remove connecting state effects */
+/* Remove ALL hover effects - keep same appearance */
+.react-flow__handle:hover,
+.react-flow__handle:active,
+.react-flow__handle:focus,
 .react-flow__handle.connecting,
-.react-flow__handle-connecting {
+.react-flow__handle-connecting,
+.react-flow__handle-valid,
+.react-flow__handle-invalid {
   background: #3a3a3a !important;
-  border-color: #555 !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-/* Remove magnetic attraction effects */
-.react-flow__node.handle-attract .react-flow__handle {
-  background: #3a3a3a !important;
-  border-color: #555 !important;
-  transform: none !important;
+  border: 2px solid #555 !important;
   box-shadow: none !important;
 }
 
-/* Remove connecting target effects */
-.react-flow__node.is-connecting-target .react-flow__handle {
+/* Remove node-level connection effects */
+.react-flow__node.handle-attract .react-flow__handle,
+.react-flow__node.is-connecting-target .react-flow__handle,
+.react-flow__node.selected .react-flow__handle {
   background: #3a3a3a !important;
-  border-color: #555 !important;
-  transform: none !important;
+  border: 2px solid #555 !important;
   box-shadow: none !important;
-}
-
-/* Remove valid connection effects */
-.react-flow__handle-valid {
-  background: #3a3a3a !important;
-  border-color: #555 !important;
-  box-shadow: none !important;
-  transform: none !important;
 }
 
 /* N8n-style dot grid */
