@@ -50,60 +50,60 @@ export const BaseCard: React.FC<BaseCardProps> = ({
         userSelect: 'none',
       }}
     >
-      {/* Top handles */}
+      {/* Top handle - single dot, works as both source and target */}
       <Handle
         type="source"
         position={Position.Top}
-        id="top-source"
-        style={{ ...handleStyle, top: -7, left: '40%', transform: 'translateX(-50%)', zIndex: 30 }}
+        id="top"
+        style={{ ...handleStyle, top: -7, left: '50%', transform: 'translateX(-50%)', zIndex: 30 }}
       />
       <Handle
         type="target"
         position={Position.Top}
-        id="top-target"
-        style={{ ...handleStyle, top: -7, left: '60%', transform: 'translateX(-50%)', zIndex: 30 }}
+        id="top"
+        style={{ ...handleStyle, top: -7, left: '50%', transform: 'translateX(-50%)', zIndex: 29, opacity: 0, pointerEvents: 'all' }}
       />
       
-      {/* Bottom handles */}
+      {/* Bottom handle - single dot */}
       <Handle
         type="source"
         position={Position.Bottom}
-        id="bottom-source"
-        style={{ ...handleStyle, bottom: -7, left: '40%', transform: 'translateX(-50%)', zIndex: 30 }}
+        id="bottom"
+        style={{ ...handleStyle, bottom: -7, left: '50%', transform: 'translateX(-50%)', zIndex: 30 }}
       />
       <Handle
         type="target"
         position={Position.Bottom}
-        id="bottom-target"
-        style={{ ...handleStyle, bottom: -7, left: '60%', transform: 'translateX(-50%)', zIndex: 30 }}
+        id="bottom"
+        style={{ ...handleStyle, bottom: -7, left: '50%', transform: 'translateX(-50%)', zIndex: 29, opacity: 0, pointerEvents: 'all' }}
       />
       
-      {/* Left handles */}
+      {/* Left handle - single dot */}
       <Handle
         type="source"
         position={Position.Left}
-        id="left-source"
-        style={{ ...handleStyle, left: -7, top: '40%', transform: 'translateY(-50%)', zIndex: 30 }}
+        id="left"
+        style={{ ...handleStyle, left: -7, top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}
       />
       <Handle
         type="target"
         position={Position.Left}
-        id="left-target"
-        style={{ ...handleStyle, left: -7, top: '60%', transform: 'translateY(-50%)', zIndex: 30 }}
+        id="left"
+        style={{ ...handleStyle, left: -7, top: '50%', transform: 'translateY(-50%)', zIndex: 29, opacity: 0, pointerEvents: 'all' }}
       />
       
-      {/* Right handles */}
+      {/* Right handle - single dot */}
       <Handle
         type="source"
         position={Position.Right}
-        id="right-source"
-        style={{ ...handleStyle, right: -7, top: '40%', transform: 'translateY(-50%)', zIndex: 30 }}
+        id="right"
+        style={{ ...handleStyle, right: -7, top: '50%', transform: 'translateY(-50%)', zIndex: 30 }}
       />
       <Handle
         type="target"
         position={Position.Right}
-        id="right-target"
-        style={{ ...handleStyle, right: -7, top: '60%', transform: 'translateY(-50%)', zIndex: 30 }}
+        id="right"
+        style={{ ...handleStyle, right: -7, top: '50%', transform: 'translateY(-50%)', zIndex: 29, opacity: 0, pointerEvents: 'all' }}
       />
 
       {/* Header */}
