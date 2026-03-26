@@ -4,15 +4,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 
-@layer base {
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body, #root { width: 100%; height: 100%; overflow: hidden; background: #111111; color: #e0e0e0; font-family: 'IBM Plex Sans', system-ui, sans-serif; }
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: #161616; }
-  ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
-}
-
 .react-flow__background { background-color: #111111 !important; }
 .react-flow__controls { background: #1a1a1a !important; border: 1px solid #2a2a2a !important; border-radius: 6px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important; }
 .react-flow__controls-button { background: #1a1a1a !important; border-color: #2a2a2a !important; fill: #666 !important; }
@@ -26,7 +17,7 @@
 /* Connection line while dragging */
 .react-flow__connection-line { stroke: #888 !important; stroke-width: 1.5 !important; stroke-dasharray: 5 3; }
 
-* Connection handle — top-center, always visible, outside the card */
+/* Connection handle — top-center, always visible, outside the card */
 .react-flow__handle {
   width: 12px !important;
   height: 12px !important;
@@ -58,6 +49,22 @@
 .react-flow__handle-right {
   right: -8px !important;
 }
+
+/* Background dot grid (n8n style) */
+.react-flow__background pattern circle {
+  fill: #2a2a2a !important;
+}
+
+.sandboxed-frame { border: none; border-radius: 4px; background: white; }
+.modal-backdrop { backdrop-filter: blur(8px); background: rgba(0,0,0,0.8); }
+
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.97) translateY(-3px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.12s ease-out; }
+
+/* Card drag handle */
+.card-drag-handle { cursor: grab; }
+.card-drag-handle:active { cursor: grabbing; }
+
 
 /* N8n-style dot grid */
 .react-flow__background pattern circle { fill: #2a2a2a !important; }
