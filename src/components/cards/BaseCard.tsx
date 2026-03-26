@@ -31,6 +31,26 @@ export const BaseCard: React.FC<BaseCardProps> = ({
   const headerBg = isLight ? '#f9f9f7' : '#1a1a1a';
   const bodyBg = cardColor;
 
+  // Visible handle style
+  const visibleHandleStyle = {
+    width: 14,
+    height: 14,
+    background: '#3a3a3a',
+    border: '2px solid #555',
+    borderRadius: '50%',
+    cursor: 'crosshair',
+  };
+
+  // Invisible target handle style - larger hit area
+  const targetHandleStyle = {
+    width: 28,
+    height: 28,
+    background: 'transparent',
+    border: 'none',
+    borderRadius: '50%',
+    cursor: 'crosshair',
+  };
+
   return (
     <div
       className="mipler-card-wrapper"
@@ -45,99 +65,107 @@ export const BaseCard: React.FC<BaseCardProps> = ({
         userSelect: 'none',
       }}
     >
-      {/* Top - source handle (visible) */}
-      <Handle
-        type="source"
-        position={Position.Top}
-        id="top-source"
-        style={{ top: -7, left: '50%', transform: 'translateX(-50%)', zIndex: 30, boxShadow: 'none' }}
-      />
-      {/* Top - target handle (same position, transparent, catches incoming connections) */}
+      {/* TOP HANDLES */}
       <Handle
         type="target"
         position={Position.Top}
         id="top-target"
-        style={{ 
-          top: -7, 
-          left: '50%', 
-          transform: 'translateX(-50%)', 
+        style={{
+          ...targetHandleStyle,
+          top: -14,
+          left: '50%',
+          transform: 'translateX(-50%)',
           zIndex: 31,
-          background: 'transparent',
-          border: 'none',
-          width: 20,
-          height: 20,
         }}
       />
-      
-      {/* Bottom - source handle (visible) */}
       <Handle
         type="source"
-        position={Position.Bottom}
-        id="bottom-source"
-        style={{ bottom: -7, left: '50%', transform: 'translateX(-50%)', zIndex: 30, boxShadow: 'none' }}
+        position={Position.Top}
+        id="top-source"
+        style={{
+          ...visibleHandleStyle,
+          top: -7,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 32,
+        }}
       />
-      {/* Bottom - target handle */}
+
+      {/* BOTTOM HANDLES */}
       <Handle
         type="target"
         position={Position.Bottom}
         id="bottom-target"
-        style={{ 
-          bottom: -7, 
-          left: '50%', 
-          transform: 'translateX(-50%)', 
+        style={{
+          ...targetHandleStyle,
+          bottom: -14,
+          left: '50%',
+          transform: 'translateX(-50%)',
           zIndex: 31,
-          background: 'transparent',
-          border: 'none',
-          width: 20,
-          height: 20,
         }}
       />
-      
-      {/* Left - source handle (visible) */}
       <Handle
         type="source"
-        position={Position.Left}
-        id="left-source"
-        style={{ left: -7, top: '50%', transform: 'translateY(-50%)', zIndex: 30, boxShadow: 'none' }}
+        position={Position.Bottom}
+        id="bottom-source"
+        style={{
+          ...visibleHandleStyle,
+          bottom: -7,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 32,
+        }}
       />
-      {/* Left - target handle */}
+
+      {/* LEFT HANDLES */}
       <Handle
         type="target"
         position={Position.Left}
         id="left-target"
-        style={{ 
-          left: -7, 
-          top: '50%', 
-          transform: 'translateY(-50%)', 
+        style={{
+          ...targetHandleStyle,
+          left: -14,
+          top: '50%',
+          transform: 'translateY(-50%)',
           zIndex: 31,
-          background: 'transparent',
-          border: 'none',
-          width: 20,
-          height: 20,
         }}
       />
-      
-      {/* Right - source handle (visible) */}
       <Handle
         type="source"
-        position={Position.Right}
-        id="right-source"
-        style={{ right: -7, top: '50%', transform: 'translateY(-50%)', zIndex: 30, boxShadow: 'none' }}
+        position={Position.Left}
+        id="left-source"
+        style={{
+          ...visibleHandleStyle,
+          left: -7,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 32,
+        }}
       />
-      {/* Right - target handle */}
+
+      {/* RIGHT HANDLES */}
       <Handle
         type="target"
         position={Position.Right}
         id="right-target"
-        style={{ 
-          right: -7, 
-          top: '50%', 
-          transform: 'translateY(-50%)', 
+        style={{
+          ...targetHandleStyle,
+          right: -14,
+          top: '50%',
+          transform: 'translateY(-50%)',
           zIndex: 31,
-          background: 'transparent',
-          border: 'none',
-          width: 20,
-          height: 20,
+        }}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="right-source"
+        style={{
+          ...visibleHandleStyle,
+          right: -7,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 32,
         }}
       />
 
