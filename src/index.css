@@ -13,7 +13,6 @@
   ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
 }
 
-/* ReactFlow overrides */
 .react-flow__background { background-color: #111111 !important; }
 .react-flow__controls { background: #1a1a1a !important; border: 1px solid #2a2a2a !important; border-radius: 6px !important; box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important; }
 .react-flow__controls-button { background: #1a1a1a !important; border-color: #2a2a2a !important; fill: #666 !important; }
@@ -23,45 +22,54 @@
 .react-flow__node { cursor: grab; }
 .react-flow__node:active { cursor: grabbing; }
 .react-flow__edge-path { stroke-linecap: round; }
-.react-flow__connection-line { stroke: #aaa !important; stroke-width: 1.5 !important; stroke-dasharray: 5 3; }
 
-/* Connection handle — top-center, always visible, outside the card */
+/* Connection line while dragging */
+.react-flow__connection-line { stroke: #888 !important; stroke-width: 1.5 !important; stroke-dasharray: 5 3; }
+
+/* ── Handles: large, outside card, always visible, drag-friendly ── */
 .react-flow__handle {
-  width: 12px !important;
-  height: 12px !important;
-  background: #3a3a3a !important;
-  border: 1.5px solid #555 !important;
+  width: 14px !important;
+  height: 14px !important;
+  background: #2a2a2a !important;
+  border: 2px solid #444 !important;
   border-radius: 50% !important;
   opacity: 1 !important;
-  transition: background 0.12s, border-color 0.12s, transform 0.12s !important;
+  transition: background 0.1s, border-color 0.1s, transform 0.15s, box-shadow 0.15s !important;
   z-index: 30 !important;
-}
-.react-flow__handle:hover,
-.react-flow__handle-connecting {
-  background: #ffffff !important;
-  border-color: #ffffff !important;
-  transform: scale(1.5) !important;
-  box-shadow: 0 0 8px rgba(255,255,255,0.5) !important;
   cursor: crosshair !important;
 }
-/* Position top handle above card */
-.react-flow__handle-top {
-  top: -8px !important;
-}
-.react-flow__handle-bottom {
-  bottom: -8px !important;
-}
-.react-flow__handle-left {
-  left: -8px !important;
-}
-.react-flow__handle-right {
-  right: -8px !important;
+
+/* Always show handles — no hover-only */
+.react-flow__handle-top    { top: -9px !important; }
+.react-flow__handle-bottom { bottom: -9px !important; }
+.react-flow__handle-left   { left: -9px !important; }
+.react-flow__handle-right  { right: -9px !important; }
+
+/* Hover on handle */
+.react-flow__handle:hover {
+  background: #e0e0e0 !important;
+  border-color: #e0e0e0 !important;
+  transform: scale(1.5) !important;
+  box-shadow: 0 0 0 5px rgba(224,224,224,0.12) !important;
 }
 
-/* Background dot grid (n8n style) */
-.react-flow__background pattern circle {
-  fill: #2a2a2a !important;
+/* Magnetic attraction state — set via JS class on node */
+.react-flow__node.handle-attract .react-flow__handle {
+  background: #c0c0c0 !important;
+  border-color: #fff !important;
+  transform: scale(1.9) !important;
+  box-shadow: 0 0 0 8px rgba(255,255,255,0.18) !important;
 }
+
+/* While connecting, highlight all potential targets */
+.react-flow__node.is-connecting-target .react-flow__handle {
+  background: #aaa !important;
+  border-color: #ddd !important;
+  transform: scale(1.4) !important;
+}
+
+/* N8n-style dot grid */
+.react-flow__background pattern circle { fill: #2a2a2a !important; }
 
 .sandboxed-frame { border: none; border-radius: 4px; background: white; }
 .modal-backdrop { backdrop-filter: blur(8px); background: rgba(0,0,0,0.8); }
@@ -69,56 +77,28 @@
 @keyframes fadeIn { from { opacity: 0; transform: scale(0.97) translateY(-3px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 .animate-fade-in { animation: fadeIn 0.12s ease-out; }
 
-/* Card drag handle */
 .card-drag-handle { cursor: grab; }
 .card-drag-handle:active { cursor: grabbing; }
 
-/* Toolbar item base */
+/* Toolbar button base */
 .tb-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 8px;
-  border-radius: 5px;
-  font-size: 12px;
-  color: #888;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  transition: background 0.1s, color 0.1s;
-  white-space: nowrap;
-  font-family: inherit;
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 8px; border-radius: 5px; font-size: 12px;
+  color: #888; border: none; background: transparent;
+  cursor: pointer; transition: background 0.1s, color 0.1s;
+  white-space: nowrap; font-family: inherit;
 }
 .tb-btn:hover { background: #1e1e1e; color: #e0e0e0; }
 .tb-btn.active { background: #1e1e1e; color: #e0e0e0; }
 .tb-sep { width: 1px; height: 20px; background: #222; margin: 0 2px; flex-shrink: 0; }
 
-/* VSCode-style API workspace */
+/* VSCode editor */
 .api-workspace {
   font-family: 'IBM Plex Mono', 'Courier New', monospace;
-  font-size: 13px;
-  line-height: 1.6;
-  background: #1e1e1e;
-  color: #d4d4d4;
-  border: none;
-  outline: none;
-  resize: none;
-  width: 100%;
-  height: 100%;
-  padding: 16px;
+  font-size: 13px; line-height: 1.6;
+  background: #1e1e1e; color: #d4d4d4;
+  border: none; outline: none; resize: none;
+  width: 100%; height: 100%; padding: 16px;
   tab-size: 2;
 }
 .api-workspace::selection { background: #264f78; }
-
-/* Resizable card border hover for connection */
-.mipler-card-wrapper:hover .card-connect-border {
-  opacity: 1;
-}
-.card-connect-border {
-  position: absolute;
-  inset: -3px;
-  border: 1.5px dashed transparent;
-  border-radius: 8px;
-  pointer-events: none;
-  transition: border-color 0.15s;
-}

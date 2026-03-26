@@ -4,52 +4,46 @@ export async function sendAiMessage(
   history: AiMessage[],
   newMessage: string,
   apiKey: string,
-  provider: string
+  provider: string,
+  baseUrl?: string,
+  model?: string,
 ): Promise<string> {
-  if (!apiKey) throw new Error('No API key configured. Open API Settings to add one.');
+  const msgs = history.map(m => ({ role: m.role, content: m.content }));
+  msgs.push({ role: 'user', content: newMessage });
 
-  if (provider === 'anthropic') {
-    const messages = [
-      ...history.map((m) => ({ role: m.role, content: m.content })),
-      { role: 'user', content: newMessage },
-    ];
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+  if (provider === 'ollama') {
+    const url = (baseUrl || 'http://localhost:11434') + '/api/chat';
+    const res = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 1024,
-        system: 'You are an OSINT investigation assistant. Help analyze domains, IPs, people, and digital footprints. Be concise and actionable.',
-        messages,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: model || 'llama3', messages: msgs, stream: false }),
     });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error((err as any)?.error?.message || `Anthropic API error ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`Ollama error ${res.status} — is Ollama running?`);
     const data = await res.json();
-    return data.content?.[0]?.text || 'No response';
+    return data.message?.content || data.response || 'No response';
   }
 
-  // OpenAI
-  const messages = [
-    { role: 'system', content: 'You are an OSINT investigation assistant. Help analyze domains, IPs, people, and digital footprints. Be concise and actionable.' },
-    ...history.map((m) => ({ role: m.role, content: m.content })),
-    { role: 'user', content: newMessage },
-  ];
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+  if (!apiKey) throw new Error('No API key. Open AI settings to add one.');
+
+  const endpoint = provider === 'openai'
+    ? 'https://api.openai.com/v1/chat/completions'
+    : (baseUrl || 'https://api.openai.com') + '/v1/chat/completions';
+
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ model: 'gpt-4o-mini', messages, max_tokens: 1024 }),
+    body: JSON.stringify({
+      model: model || 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: 'You are an OSINT and cybersecurity investigation assistant. Be concise.' },
+        ...msgs,
+      ],
+      max_tokens: 1024,
+    }),
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error((err as any)?.error?.message || `OpenAI API error ${res.status}`);
+    throw new Error((err as any)?.error?.message || `API error ${res.status}`);
   }
   const data = await res.json();
   return data.choices?.[0]?.message?.content || 'No response';

@@ -5,6 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const AiPanel: React.FC = () => {
   const { setAiPanelOpen, aiApiKey, aiProvider, aiChatHistory, addAiMessage, clearAiChat, setApiSettingsOpen } = useWorkspaceStore();
+  const isOllama = aiProvider === 'ollama';
+  const hasAccess = isOllama || !!aiApiKey;
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -18,7 +20,8 @@ export const AiPanel: React.FC = () => {
     setInput('');
     setLoading(true);
     try {
-      const reply = await sendAiMessage(aiChatHistory, userMsg.content, aiApiKey, aiProvider);
+      const s2 = useWorkspaceStore.getState();
+      const reply = await sendAiMessage(aiChatHistory, userMsg.content, aiApiKey, aiProvider, s2.llmBaseUrl, s2.llmModel);
       addAiMessage({ id: uuidv4(), role: 'assistant', content: reply, timestamp: new Date().toISOString() });
     } catch (e: any) {
       addAiMessage({ id: uuidv4(), role: 'assistant', content: `Error: ${e.message}`, timestamp: new Date().toISOString() });
@@ -52,7 +55,7 @@ export const AiPanel: React.FC = () => {
           <span style={{ fontSize: 12, fontWeight: 600, color: '#ccc', fontFamily: 'IBM Plex Sans, sans-serif' }}>
             AI Assistant
           </span>
-          {!aiApiKey && (
+          {!hasAccess && (
             <span style={{ fontSize: 9, padding: '1px 5px', background: '#2a2000', color: '#886600', borderRadius: 3, fontFamily: 'IBM Plex Mono, monospace' }}>
               NO KEY
             </span>
@@ -143,24 +146,24 @@ export const AiPanel: React.FC = () => {
             type="text" value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && send()}
-            placeholder={aiApiKey ? 'Ask anything...' : 'Set API key first'}
-            disabled={!aiApiKey}
+            placeholder={hasAccess ? 'Ask anything...' : 'Set API key first'}
+            disabled={!hasAccess}
             style={{
               flex: 1, padding: '6px 10px', background: '#1a1a1a',
               border: '1px solid #252525', borderRadius: 5,
               fontSize: 12, color: '#ccc', outline: 'none',
-              fontFamily: 'IBM Plex Sans', opacity: !aiApiKey ? 0.4 : 1,
+              fontFamily: 'IBM Plex Sans', opacity: !hasAccess ? 0.4 : 1,
             }}
             onFocus={(e) => (e.currentTarget.style.borderColor = '#3a3a3a')}
             onBlur={(e) => (e.currentTarget.style.borderColor = '#252525')}
           />
-          <button onClick={send} disabled={!input.trim() || loading || !aiApiKey}
+          <button onClick={send} disabled={!input.trim() || loading || !hasAccess}
             style={{
               padding: '6px 12px', background: '#0e639c', color: '#fff',
               border: 'none', borderRadius: 5, fontSize: 12,
-              cursor: (!input.trim() || loading || !aiApiKey) ? 'default' : 'pointer',
+              cursor: (!input.trim() || loading || !hasAccess) ? 'default' : 'pointer',
               fontFamily: 'IBM Plex Sans',
-              opacity: (!input.trim() || loading || !aiApiKey) ? 0.3 : 1,
+              opacity: (!input.trim() || loading || !hasAccess) ? 0.3 : 1,
             }}>
             Send
           </button>

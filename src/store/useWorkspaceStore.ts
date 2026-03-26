@@ -59,6 +59,8 @@ interface WorkspaceStore {
 
   // AI
   aiApiKey: string;
+  llmBaseUrl: string;
+  llmModel: string;
   aiProvider: string;
   aiChatHistory: AiMessage[];
 
@@ -102,6 +104,8 @@ interface WorkspaceStore {
   // AI
   setAiApiKey: (key: string) => void;
   setAiProvider: (p: string) => void;
+  setLlmBaseUrl: (u: string) => void;
+  setLlmModel: (m: string) => void;
   addAiMessage: (msg: AiMessage) => void;
   clearAiChat: () => void;
 
@@ -182,6 +186,8 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
   defaultStrokeWidth: 2,
 
   aiApiKey: '',
+  llmBaseUrl: 'http://localhost:11434',
+  llmModel: 'llama3',
   aiProvider: 'openai',
   aiChatHistory: [],
 
@@ -328,6 +334,8 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
 
   setAiApiKey: (key) => set({ aiApiKey: key }),
   setAiProvider: (p) => set({ aiProvider: p }),
+  setLlmBaseUrl: (u) => set({ llmBaseUrl: u }),
+  setLlmModel: (m) => set({ llmModel: m }),
   addAiMessage: (msg) => set((s) => ({ aiChatHistory: [...s.aiChatHistory, msg] })),
   clearAiChat: () => set({ aiChatHistory: [] }),
 
@@ -430,6 +438,8 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       activeInvestigationId: s.activeInvestigationId,
       aiApiKey: s.aiApiKey,
       aiProvider: s.aiProvider,
+      llmBaseUrl: s.llmBaseUrl,
+      llmModel: s.llmModel,
       aiChatHistory: s.aiChatHistory,
       showDots: s.showDots,
       createdAt: new Date().toISOString(),
@@ -474,6 +484,8 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       viewport: active.viewport,
       aiApiKey: ws.aiApiKey || '',
       aiProvider: ws.aiProvider || 'openai',
+      llmBaseUrl: (ws as any).llmBaseUrl || 'http://localhost:11434',
+      llmModel: (ws as any).llmModel || 'llama3',
       aiChatHistory: ws.aiChatHistory || [],
       showDots: ws.showDots !== undefined ? ws.showDots : true,
       history: [],
