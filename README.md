@@ -23,6 +23,14 @@
 - **Dot grid** — n8n-style background, togglable
 - **Export / Import** — full JSON export includes everything: all investigations, API keys, AI chat history
 - **Fresh start** — every new page load is a clean slate (nothing persists in localStorage)
+- **Space** — you will get a large area for your work
+
+## Example investigation
+
+<div align=center>
+<img src=image/test.png>
+<img src=image/t2.png>
+</div>
 
 ## Getting Started
 
@@ -54,3 +62,4 @@ Each card has 4 connection handles — top, bottom, left, right — positioned *
 ## Export & Import
 
 Export saves a single JSON file containing every investigation, all card data, edge styles, API keys, and AI history. Import replaces the current workspace with the imported file — everything comes back exactly as left.
+
