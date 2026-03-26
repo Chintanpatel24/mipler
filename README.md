@@ -1,3 +1,9 @@
+<div align=center>
+<img src=image/mipler.png>
+</div>
+
+---
+
 # Mipler — Investigation Wall
 
 A clean, n8n/Notion-inspired OSINT investigation canvas.
