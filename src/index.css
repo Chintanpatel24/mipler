@@ -26,25 +26,38 @@
 /* Connection line while dragging */
 .react-flow__connection-line { stroke: #888 !important; stroke-width: 1.5 !important; stroke-dasharray: 5 3; }
 
-/* ── Handles: large, outside card, always visible, drag-friendly ── */
+* Connection handle — top-center, always visible, outside the card */
 .react-flow__handle {
-  width: 14px !important;
-  height: 14px !important;
-  background: #2a2a2a !important;
-  border: 2px solid #444 !important;
+  width: 12px !important;
+  height: 12px !important;
+  background: #3a3a3a !important;
+  border: 1.5px solid #555 !important;
   border-radius: 50% !important;
   opacity: 1 !important;
-  transition: background 0.1s, border-color 0.1s, transform 0.15s, box-shadow 0.15s !important;
+  transition: background 0.12s, border-color 0.12s, transform 0.12s !important;
   z-index: 30 !important;
+}
+.react-flow__handle:hover,
+.react-flow__handle-connecting {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  transform: scale(1.5) !important;
+  box-shadow: 0 0 8px rgba(255,255,255,0.5) !important;
   cursor: crosshair !important;
 }
-
-/* Always show handles — no hover-only */
-.react-flow__handle-top    { top: -9px !important; }
-.react-flow__handle-bottom { bottom: -9px !important; }
-.react-flow__handle-left   { left: -9px !important; }
-.react-flow__handle-right  { right: -9px !important; }
-
+/* Position top handle above card */
+.react-flow__handle-top {
+  top: -8px !important;
+}
+.react-flow__handle-bottom {
+  bottom: -8px !important;
+}
+.react-flow__handle-left {
+  left: -8px !important;
+}
+.react-flow__handle-right {
+  right: -8px !important;
+}
 
 /* N8n-style dot grid */
 .react-flow__background pattern circle { fill: #2a2a2a !important; }
