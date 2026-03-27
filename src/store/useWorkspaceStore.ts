@@ -121,6 +121,7 @@ interface WorkspaceStore {
   // Serialization
   getWorkspaceState: () => WorkspaceState;
   loadWorkspaceState: (state: WorkspaceState) => void;
+  importWorkspaceAsNew: (state: WorkspaceState) => void;
   clearWorkspace: () => void;
 }
 
@@ -159,6 +160,41 @@ function createInvestigation(name?: string): Investigation {
 const dashMap: Record<LineStyle, string> = { dashed: '8 4', dotted: '2 4', solid: '0' };
 
 const firstInv = createInvestigation();
+
+// ── Helper to regenerate all IDs in an investigation ──
+function regenerateIds(inv: Investigation): Investigation {
+  const nodeIdMap: Record<string, string> = {};
+  const edgeIdMap: Record<string, string> = {};
+
+  // Generate new IDs for all nodes
+  const newNodes: MiplerNode[] = inv.nodes.map((node) => {
+    const newId = `card-${uuidv4()}`;
+    nodeIdMap[node.id] = newId;
+    return {
+      ...node,
+      id: newId,
+    };
+  });
+
+  // Generate new IDs for all edges and update source/target references
+  const newEdges: MiplerEdge[] = inv.edges.map((edge) => {
+    const newId = `edge-${uuidv4()}`;
+    edgeIdMap[edge.id] = newId;
+    return {
+      ...edge,
+      id: newId,
+      source: nodeIdMap[edge.source] || edge.source,
+      target: nodeIdMap[edge.target] || edge.target,
+    };
+  });
+
+  return {
+    ...inv,
+    id: uuidv4(),
+    nodes: newNodes,
+    edges: newEdges,
+  };
+}
 
 export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
   investigations: [firstInv],
@@ -447,6 +483,7 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
     };
   },
 
+  // ── Import and REPLACE entire workspace (regenerate all IDs) ──
   loadWorkspaceState: (ws) => {
     // Handle legacy single-investigation format
     let investigations = ws.investigations;
@@ -461,8 +498,11 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       activeId = inv.id;
     }
 
+    // Regenerate ALL IDs so each import is unique
+    const regeneratedInvestigations = investigations.map((inv) => regenerateIds(inv));
+
     // Restore edge styles
-    for (const inv of investigations) {
+    for (const inv of regeneratedInvestigations) {
       for (const edge of inv.edges) {
         if (edge.data) {
           edge.style = {
@@ -474,10 +514,10 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       }
     }
 
-    const active = investigations.find((i) => i.id === activeId) || investigations[0];
+    const active = regeneratedInvestigations.find((i) => i.id === activeId) || regeneratedInvestigations[0];
 
     set({
-      investigations,
+      investigations: regeneratedInvestigations,
       activeInvestigationId: active.id,
       nodes: active.nodes,
       edges: active.edges,
@@ -488,6 +528,53 @@ export const useWorkspaceStore = create<WorkspaceStore>((set, get) => ({
       llmModel: (ws as any).llmModel || 'llama3',
       aiChatHistory: ws.aiChatHistory || [],
       showDots: ws.showDots !== undefined ? ws.showDots : true,
+      history: [],
+      historyIndex: -1,
+      lastModified: Date.now(),
+    });
+  },
+
+  // ── Import as NEW investigation (adds to existing workspace) ──
+  importWorkspaceAsNew: (ws) => {
+    const s = get();
+    s.syncActiveInvestigation();
+
+    // Handle legacy single-investigation format
+    let investigations = ws.investigations;
+
+    if (!investigations || investigations.length === 0) {
+      const inv = createInvestigation(ws.name || 'Imported');
+      inv.nodes = ws.nodes || [];
+      inv.edges = ws.edges || [];
+      inv.viewport = ws.viewport || { x: 0, y: 0, zoom: 1 };
+      investigations = [inv];
+    }
+
+    // Regenerate ALL IDs so each import is unique
+    const regeneratedInvestigations = investigations.map((inv) => regenerateIds(inv));
+
+    // Restore edge styles
+    for (const inv of regeneratedInvestigations) {
+      for (const edge of inv.edges) {
+        if (edge.data) {
+          edge.style = {
+            stroke: edge.data.color || '#888',
+            strokeWidth: edge.data.strokeWidth || 2,
+            strokeDasharray: dashMap[edge.data.lineStyle || 'dashed'],
+          };
+        }
+      }
+    }
+
+    const newInvestigations = [...s.investigations, ...regeneratedInvestigations];
+    const newActive = regeneratedInvestigations[0];
+
+    set({
+      investigations: newInvestigations,
+      activeInvestigationId: newActive.id,
+      nodes: newActive.nodes,
+      edges: newActive.edges,
+      viewport: newActive.viewport,
       history: [],
       historyIndex: -1,
       lastModified: Date.now(),
