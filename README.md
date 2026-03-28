@@ -1,4 +1,8 @@
-# Mipler v2 — Local OSINT Investigation Wall
+<div align=center>
+<img src=image/mipler.png>
+</div>
+
+># Mipler - Local OSINT Investigation Wall
 
 > A fully **local**, **offline-first**, **Ollama-powered** OSINT investigation canvas.  
 > No API keys. No cloud. No data leaves your machine.
@@ -212,6 +216,14 @@ npm start
 bash start.sh
 ```
 
+---
+
+## Example images
+
+<div align=center>
+<img src=image/test.png>
+<img src=images/t2.png>
+</div>
 ---
 
 ## Project Structure
