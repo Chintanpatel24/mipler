@@ -14,6 +14,15 @@ app.use(express.static(join(__dirname, 'dist')));
 // SPA fallback
 app.get('*', (_req, res) => res.sendFile(join(__dirname, 'dist', 'index.html')));
 
-app.listen(Number(PORT), HOST, () => {
+const server = app.listen(Number(PORT), HOST, () => {
   console.log(`Mipler running at http://localhost:${PORT}  (bound to ${HOST})`);
+});
+
+server.on('error', (error) => {
+  if (error && typeof error === 'object' && 'code' in error) {
+    console.error(`[mipler] Failed to bind ${HOST}:${PORT} (${error.code})`);
+  } else {
+    console.error('[mipler] Failed to start the local server');
+  }
+  process.exit(1);
 });
