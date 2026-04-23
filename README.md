@@ -1,3 +1,7 @@
+<div align="center">
+<img src="image/mipler.png">
+</div>
+
 # Mipler — Swarm Investigation + Personal Assistant
 
 > A swarm-based investigation wall plus a persistent personal AI assistant.  
