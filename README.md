@@ -1,5 +1,7 @@
 <div align="center">
-<img src="image/mipler.png">
+
+<img width="300" alt="mipler" src="https://github.com/user-attachments/assets/3d2c54f7-813f-46ed-800b-b47e05c32cfb" />
+
 </div>
 
 # Mipler - Swarm Investigation + Personal Assistant
