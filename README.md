@@ -7,7 +7,7 @@
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-blue?style=flat-square)
 </div>
 
-# Mipler - Swarm Investigation + Personal Assistant
+# Mipler - Swarm Investigation support with canvas note taking 
 
 > A swarm-based investigation wall plus a persistent personal AI assistant.  
 > Local-first storage, encrypted provider keys, model-provider switching, and scheduled automation.
