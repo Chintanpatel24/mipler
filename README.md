@@ -12,9 +12,6 @@
 > A swarm-based investigation wall plus a persistent personal AI assistant.  
 > Local-first storage, encrypted provider keys, model-provider switching, and scheduled automation.
 
-## Web Demo : [Tap to view](https://miplerrv2.vercel.app/)
-
-
 ---
 
 ## Quick Start
