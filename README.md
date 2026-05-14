@@ -12,14 +12,8 @@
 > A swarm-based investigation wall plus a persistent personal AI assistant.  
 > Local-first storage, encrypted provider keys, model-provider switching, and scheduled automation.
 
----
+## Web Demo : [Tap to view](https://miplerrv2.vercel.app/)
 
-## Requirements
-
-- **Node.js** v18 or higher - [nodejs.org](https://nodejs.org)
-- **Ollama** for local-only use, or API keys for OpenAI / Anthropic / OpenRouter.
-
-Cloud providers are optional. Local Ollama still works without external APIs.
 
 ---
 
@@ -40,11 +34,9 @@ npm install -g .
 mipler
 ```
 
-If you do not want the global command, run `npm start` inside the project folder instead.
-
-On Windows, `npm install -g .` creates the `mipler.cmd` launcher automatically. For a local repo checkout you can also run `start.cmd`.
-
-Then open your browser at **http://localhost:3000**
+- If you do not want the global command, run `npm start` inside the project folder instead.
+- On Windows, `npm install -g .` creates the `mipler.cmd` launcher automatically. For a local repo checkout you can also run `start.cmd`.
+- Then open your browser at **http://localhost:3000**
 
 ---
 
