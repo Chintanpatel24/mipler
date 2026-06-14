@@ -29,6 +29,9 @@ npm install -g .
 
 # 4. Start Mipler
 mipler
+
+# or
+bash start.sh
 ```
 
 - If you do not want the global command, run `npm start` inside the project folder instead.
